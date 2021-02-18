@@ -36,7 +36,12 @@ def create_space_magnitude_region(name, min_mw, max_mw, dmw):
 def get_forecast_filepath(simulation_list, job_idx):
     with open(simulation_list) as f:
         lines = f.readlines()
-    return lines[job_idx].strip()
+    try:
+        path = lines[job_idx].strip()
+    except IndexError:
+        print(f"No directory in manifest for index {job_idx}.")
+        sys.exit(0)
+    return path
 
 def create_output_filepath(sim_dir, suffix):
     base = os.path.basename(sim_dir)

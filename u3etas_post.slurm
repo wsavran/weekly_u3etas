@@ -1,10 +1,10 @@
 #! /bin/bash
 
-#SBATCH -t 2:00:00
-#SBATCH -N 20
+#SBATCH -t 1:00:00
+#SBATCH -N 15
 #SBATCH --mem 0
 #SBATCH --ntasks-per-node=20
-#SBATCH --ntasks=1794
+#SBATCH --ntasks=1800
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=wsavran@usc.edu
 
