@@ -5,15 +5,12 @@ import time
 
 from csep import load_catalog_forecast, load_catalog, write_json
 from csep.core import regions, catalog_evaluations
-from csep.utils import current_git_hash, git_remote_url, git_status_string
 from csep.utils.constants import SECONDS_PER_WEEK
 from csep.utils.file import mkdirs
 
 config = {
-    # 'simulation_list': '/home1/wsavran/scratch/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt',
-    'simulation_list': '/Users/wsavran/Desktop/Temporary/test_manifest.txt',
-    # 'output_dir': '/project/scec_608/wsavran/csep/u3etas_weekly',
-    'output_dir': '/Users/wsavran/Desktop/Temporary/test_run',
+    'simulation_list': '/home1/wsavran/scratch/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt',
+    'output_dir': '/project/scec_608/wsavran/csep/u3etas_weekly/2020_05_14-weekly-1986-present-full_td-kCOV1.5',
     'forecast_duration_millis': SECONDS_PER_WEEK * 1000,
     'region_information': {
         'name': 'california_relm_region',
@@ -21,15 +18,10 @@ config = {
         'max_mw': 8.0,
         'dmw': 0.2
     },
-    # 'catalog_path': '/project/scec_608/wsavran/csep/u3etas_weekly/comcat-2021-02-12-unfiltered.csv',
-    'catalog_path': '/Users/wsavran/Desktop/Temporary/comcat-2021-02-12-unfiltered.csv',
-    # 'job_idx': sys.argv[1],
-    'job_idx': 0,
+    'catalog_path': '/project/scec_608/wsavran/git/weekly_u3etas_processing/comcat-2021-02-12-unfiltered.csv',
+    'job_idx': int(sys.argv[1]),
     'forecast_path': '',
     'forecast_dir': '',
-    'github_url': git_remote_url(),
-    'current_git_hash': current_git_hash(),
-    'git_status': git_status_string(),
 }
 
 def create_space_magnitude_region(name, min_mw, max_mw, dmw):
