@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#SBATCH --time=0:45:00
+#SBATCH --time=1:00:00
 #SBATCH --nodes=4
 #SBATCH --ntasks-per-node=20
 
@@ -24,7 +24,7 @@
 # 
 
 od="/project/scec_608/wsavran/csep/u3etas_weekly/2020_05_14-weekly-1986-present-full_td-kCOV1.5"
-sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest_test.txt"
+sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt"
 n=$(cat $sm | wc -l)
 for (( i=0; i<$n; i++ ));
 do
