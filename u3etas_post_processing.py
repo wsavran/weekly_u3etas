@@ -9,8 +9,8 @@ from csep.utils.constants import SECONDS_PER_WEEK
 from csep.utils.file import mkdirs
 
 config = {
-    'simulation_list': '/home1/wsavran/scratch/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt',
-    'output_dir': '/project/scec_608/wsavran/csep/u3etas_weekly/2020_05_14-weekly-1986-present-full_td-kCOV1.5',
+    'simulation_list': sys.argv[2],
+    'output_dir': sys.argv[3],
     'forecast_duration_millis': SECONDS_PER_WEEK * 1000,
     'region_information': {
         'name': 'california_relm_region',

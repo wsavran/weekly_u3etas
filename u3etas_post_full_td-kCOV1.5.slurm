@@ -1,12 +1,8 @@
 #! /bin/bash
 
-#SBATCH -t 1:00:00
-#SBATCH -N 15
-#SBATCH --mem 0
+#SBATCH --time=0:45:00
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=20
-#SBATCH --ntasks=1800
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=wsavran@usc.edu
 
 ######################
 ## INPUT PARAMETERS ##
@@ -27,7 +23,11 @@
 # absolute paths to the pyton interpreter insure that we are using the correct distributiuon
 # 
 
-module load gcc
-module load anaconda3
-
-srun -E -l --multi-prog /project/scec_608/wsavran/git/weekly_u3etas_processing/u3_jobs.conf
+od="/project/scec_608/wsavran/csep/u3etas_weekly/2020_05_14-weekly-1986-present-full_td-kCOV1.5"
+sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest_test.txt"
+n=$(cat $sm | wc -l)
+for (( i=0; i<$n; i++ ));
+do
+    srun --exclusive --cpus-per-task=1 --ntasks=1 /project/scec_608/wsavran/envs/csep-dev/bin/python /project/scec_608/wsavran/git/weekly_u3etas_processing/u3etas_post_processing.py $i $sm $od & 
+done
+wait
