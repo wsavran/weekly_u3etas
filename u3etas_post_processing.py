@@ -3,6 +3,8 @@ import sys
 import json
 import time
 
+import numpy as np
+
 from csep import load_catalog_forecast, load_catalog, write_json
 from csep.core import regions, catalog_evaluations
 from csep.utils.constants import SECONDS_PER_WEEK
@@ -113,7 +115,11 @@ def process_ucerf3_forecast(config):
                                      filters=filters,
                                      filter_spatial=True,
                                      apply_filters=True)
-
+    min_mws = []
+    for catalog in forecast:
+        min_mws.append(catalog.get_magnitudes().min())
+    print(f"Overall minimum magnitude for all catalogs: {np.min(min_mws)}")
+        
     # Compute expected rates for spatial test
     _ = forecast.get_expected_rates()
 
@@ -124,6 +130,8 @@ def process_ucerf3_forecast(config):
                                 name='comcat',
                                 apply_filters=True)
 
+    print(eval_catalog)
+
     # Compute and store number test
     print("Computing number-test on forecast.")
     ntest_result = catalog_evaluations.number_test(forecast, eval_catalog)
@@ -131,9 +139,12 @@ def process_ucerf3_forecast(config):
         config['output_dir'],
         create_output_filepath(config['forecast_dir'], 'ntest_result.json')
     )
-    write_json(ntest_result, ntest_path)
-    config['ntest_path'] = ntest_path
-    print(f"Writing outputs to {config['ntest_path']}.")
+    try:
+        write_json(ntest_result, ntest_path)
+        config['ntest_path'] = ntest_path
+        print(f"Writing outputs to {config['ntest_path']}.")
+    except IOError:
+        print("Unable to write n-test result.")
 
     # Compute and store spatial test
     print("Computing spatial test on forecast.")
@@ -142,8 +153,11 @@ def process_ucerf3_forecast(config):
         create_output_filepath(config['forecast_dir'], 'stest_result.json')
     )
     stest_result = catalog_evaluations.spatial_test(forecast, eval_catalog)
-    write_json(stest_result, stest_path)
-    config['stest_path'] = stest_path
+    try:
+        write_json(stest_result, stest_path)
+        config['stest_path'] = stest_path
+    except (IOError, TypeError, ValueError):
+        print("Unable to write s-test result.")
 
     # Write calculation configuration
     config_path = os.path.join(
