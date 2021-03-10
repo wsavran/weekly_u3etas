@@ -11,6 +11,7 @@ from csep.utils.constants import SECONDS_PER_WEEK
 from csep.utils.file import mkdirs
 
 config = {
+    'version': 2,
     'simulation_list': sys.argv[2],
     'output_dir': sys.argv[3],
     'forecast_duration_millis': SECONDS_PER_WEEK * 1000,
@@ -53,13 +54,12 @@ def create_output_filepath(sim_dir, suffix):
 def process_ucerf3_forecast(config):
     """ Post-processing script for ucerf3-forecasts
 
-    Program will perform N and S tests and write out evaluation results.
+    Program will perform N, M, and S tests and write out evaluation results.
 
     Args:
         config (dict): contents of configuration needed to run the job
 
     """
-
     # Get directory of forecast file from simulation manifest
     forecast_dir = get_forecast_filepath(config['simulation_list'], config['job_idx'])
     config.update({'forecast_dir': forecast_dir})
@@ -115,10 +115,13 @@ def process_ucerf3_forecast(config):
                                      filters=filters,
                                      filter_spatial=True,
                                      apply_filters=True)
+
+    # Sanity check to ensure that forecasts are filtered properly
     min_mws = []
     for catalog in forecast:
-        min_mws.append(catalog.get_magnitudes().min())
-    print(f"Overall minimum magnitude for all catalogs: {np.min(min_mws)}")
+        if catalog.event_count > 0:
+            min_mws.append(catalog.get_magnitudes().min())
+    print(f"Overall minimum magnitude of catalogs in forecast: {np.min(min_mws)}")
         
     # Compute expected rates for spatial test
     _ = forecast.get_expected_rates()
@@ -129,8 +132,6 @@ def process_ucerf3_forecast(config):
                                 filters=filters,
                                 name='comcat',
                                 apply_filters=True)
-
-    print(eval_catalog)
 
     # Compute and store number test
     print("Computing number-test on forecast.")
@@ -145,6 +146,20 @@ def process_ucerf3_forecast(config):
         print(f"Writing outputs to {config['ntest_path']}.")
     except IOError:
         print("Unable to write n-test result.")
+
+    # Compute and store magnitude test
+    print("Computing magnitude-test on forecast.")
+    mtest_result = catalog_evaluations.magnitude_test(forecast, eval_catalog)
+    mtest_path = os.path.join(
+            config['output_dir'],
+            create_output_filepath(config['forecast_dir'], 'mtest_result.json')
+    )
+    try:
+        write_json(mtest_result, mtest_path)
+        config['mtest_path'] = mtest_path
+        print(f"Writing outputs to {config['mtest_path']}.")
+    except IOError:
+        print("Unable to write m-test result.")
 
     # Compute and store spatial test
     print("Computing spatial test on forecast.")
