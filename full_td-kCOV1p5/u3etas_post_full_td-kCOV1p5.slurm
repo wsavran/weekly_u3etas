@@ -1,7 +1,7 @@
 #! /bin/bash
 
-#SBATCH --time=1:00:00
-#SBATCH --nodes=4
+#SBATCH --time=2:00:00
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=20
 
 ######################
@@ -23,11 +23,11 @@
 # absolute paths to the pyton interpreter insure that we are using the correct distributiuon
 # 
 
-od="/project/scec_608/wsavran/csep/u3etas_weekly/2020_05_14-weekly-1986-present-full_td-kCOV1.5"
-sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt"
+od=$1
+sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/full_td-kCOV1p5/2020_05_14-weekly-1986-present-full_td-kCOV1.5_manifest.txt"
 n=$(cat $sm | wc -l)
 for (( i=0; i<$n; i++ ));
 do
-    srun --exclusive --cpus-per-task=1 --ntasks=1 /project/scec_608/wsavran/envs/csep-dev/bin/python /project/scec_608/wsavran/git/weekly_u3etas_processing/u3etas_post_processing.py $i $sm $od & 
+    srun --exclusive --nodes=1 --cpus-per-task=1 --ntasks=1 /project/scec_608/wsavran/envs/csep-dev/bin/python /project/scec_608/wsavran/git/weekly_u3etas_processing/u3etas_post_processing.py $i $sm $od & 
 done
 wait

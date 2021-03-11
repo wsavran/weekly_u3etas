@@ -23,7 +23,7 @@
 # absolute paths to the pyton interpreter insure that we are using the correct distributiuon
 # 
 
-od="/project/scec_608/wsavan/csep/u3etas_weekly/2020_05_25-weekly-1986-present-no_ert-kCOV1.5"
+od=$1
 sm="/project/scec_608/wsavran/git/weekly_u3etas_processing/no_ert-kCOV1p5/2020_05_25-weekly-1986-present-no_ert-kCOV1.5_manifest.txt"
 n=$(cat $sm | wc -l)
 
