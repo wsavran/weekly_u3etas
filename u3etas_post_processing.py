@@ -123,8 +123,16 @@ def process_ucerf3_forecast(config):
             min_mws.append(catalog.get_magnitudes().min())
     print(f"Overall minimum magnitude of catalogs in forecast: {np.min(min_mws)}")
         
-    # Compute expected rates for spatial test
+    # Compute expected rates for spatial test and magnitude test
     _ = forecast.get_expected_rates()
+    sc = forecast.expected_rates.spatial_counts()
+    sc_path = os.path.join(
+        config['output_dir'],
+        create_output_filepath(config['forecast_dir'], 'spatial_counts_arr-f8.bin')
+    )
+    with open(sc_path, 'wb') as sc_file:
+        print(f"Writing spatial counts to {sc_path}")
+        sc.tofile(sc_file)
 
     # Prepare evaluation catalog
     eval_catalog = load_catalog(config['catalog_path'],
