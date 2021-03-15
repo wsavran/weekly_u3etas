@@ -17,7 +17,7 @@ config = {
     'forecast_duration_millis': SECONDS_PER_WEEK * 1000,
     'region_information': {
         'name': 'california_relm_region',
-        'min_mw': 2.95,
+        'min_mw': 3.0,
         'max_mw': 8.0,
         'dmw': 0.2
     },
